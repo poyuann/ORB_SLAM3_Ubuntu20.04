@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/py/temp/ORB_SLAM3_Ubuntu20.04/ros/devel/setup.sh

@@ -1,0 +1,35 @@
+%YAML:1.0
+---
+# Camera Parameters
+Camera.type: "PinHole"              # Camera model: PinHole for standard USB camera
+Camera.fx: 900.0                    # Focal length x (replace with calibrated value)
+Camera.fy: 900.0                    # Focal length y (replace with calibrated value)
+Camera.cx: 640.0                    # Principal point x (image center: 1280/2)
+Camera.cy: 360.0                    # Principal point y (image center: 720/2)
+Camera.k1: 0.0                      # Distortion coefficient (replace with calibrated value)
+Camera.k2: 0.0                      # Distortion coefficient (replace with calibrated value)
+Camera.p1: 0.0                      # Distortion coefficient (replace with calibrated value)
+Camera.p2: 0.0                      # Distortion coefficient (replace with calibrated value)
+Camera.width: 1280                  # Image width in pixels
+Camera.height: 720                  # Image height in pixels
+Camera.fps: 30.0                    # Frames per second
+Camera.RGB: 1                       # 1 for color (BGR), 0 for grayscale
+
+# ORB Extractor Parameters
+ORBextractor.nFeatures: 1250        # Number of features to extract
+ORBextractor.scaleFactor: 1.2       # Scale factor between pyramid levels
+ORBextractor.nLevels: 8             # Number of pyramid levels
+ORBextractor.iniThFAST: 20          # Initial FAST threshold
+ORBextractor.minThFAST: 7           # Minimum FAST threshold
+
+# Viewer Parameters (for visualization)
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500
