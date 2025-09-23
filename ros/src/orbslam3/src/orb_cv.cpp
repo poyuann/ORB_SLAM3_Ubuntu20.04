@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/orb_slam3/pose", 10);
 
     // Initialize ORB-SLAM3 system (Monocular mode)
-    ORB_SLAM3::System SLAM(vocFile, parameterFile, ORB_SLAM3::System::MONOCULAR, true);
+    ORB_SLAM3::System SLAM(vocFile, parameterFile, ORB_SLAM3::System::MONOCULAR, false);
 
     // Initialize OpenCV VideoCapture
     cv::VideoCapture cap(4, cv::CAP_V4L2); // Camera index 4 with V4L2 backend
