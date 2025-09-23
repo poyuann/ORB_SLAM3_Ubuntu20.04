@@ -3,7 +3,7 @@ pathDatasetEuroc='/Datasets/EuRoC' #Example, it is necesary to change it by the 
 
 # Single Session Example (Pure visual)
 echo "Launching MH01 with Stereo sensor"
-./Stereo/stereo_euroc ../Vocabulary/ORBvoc.txt ./Stereo/EuRoC.yaml "$pathDatasetEuroc"/MH01 ./Stereo/EuRoC_TimeStamps/MH01.txt dataset-MH01_stereo
+./Stereo/stereo_euroc ../Vocabulary/ORBvoc.txt ./Stereo/EuRoC.yaml "$pathDatasetEuroc"/home/py/orb_slam/ORB_SLAM3_Ubuntu20.04/Datasets/MH01 ./Stereo/EuRoC_TimeStamps/MH01.txt dataset-MH01_stereo
 echo "------------------------------------"
 echo "Evaluation of MH01 trajectory with Stereo sensor"
 python ../evaluation/evaluate_ate_scale.py ../evaluation/Ground_truth/EuRoC_left_cam/MH01_GT.txt f_dataset-MH01_stereo.txt --plot MH01_stereo.pdf
