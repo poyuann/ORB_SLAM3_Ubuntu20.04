@@ -32,7 +32,7 @@ git checkout v0.6
 mkdir build 
 cd build 
 cmake .. -D CMAKE_BUILD_TYPE=Release 
-make -j $(nproc --ignore=2)
+make -j 
 sudo make install
 ```
 
