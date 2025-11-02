@@ -10,7 +10,7 @@ sudo apt update
 
 sudo apt-get install build-essential
 sudo apt-get install python-dev python-numpy git
-sudo apt install libavdevice-dev libzstd-dev libopenni-dev libopenni2-dev
+sudo apt install libavdevice-dev libzstd-dev libopenni-dev libopenni2-dev libglew-dev
 ```
 ### ROS noetic
 [Ros-noetic install tutorial](https://wiki.ros.org/noetic/Installation)
