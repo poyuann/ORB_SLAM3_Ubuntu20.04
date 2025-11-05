@@ -212,6 +212,16 @@ target_link_libraries(orb_cv
   ${LIBS}
 )
 
+##  cv read && imwrite version orb slam3
+
+add_executable(orb_write src/orb_write.cpp)
+
+target_link_libraries(orb_write
+  ${catkin_LIBRARIES}
+  ${LIBS}
+)
+
+
 
 #############
 ## Install ##

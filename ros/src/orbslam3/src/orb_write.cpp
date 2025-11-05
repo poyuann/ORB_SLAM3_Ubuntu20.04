@@ -2,10 +2,6 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include "System.h"
-#include "Converter.h"
-#include "Tracking.h"          
-#include "KeyFrame.h"
-#include "Frame.h"                    
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 
@@ -28,22 +24,15 @@ const cv::Mat R_camera_to_world = (cv::Mat_<float>(3, 3) <<
 class ImageGrabber
 {
 public:
-    ImageGrabber(ORB_SLAM3::System* pSLAM, cv::VideoCapture& cap, ros::Publisher& pose_pub, ros::Publisher& keyframe_pub)
-        : mpSLAM(pSLAM), mCap(cap), mPosePub(pose_pub), mkeyframePub(keyframe_pub) 
-    {
-        static ORB_SLAM3::KeyFrame* pLastKF = nullptr;
-    }
+    ImageGrabber(ORB_SLAM3::System* pSLAM, cv::VideoCapture& cap, ros::Publisher& pose_pub)
+        : mpSLAM(pSLAM), mCap(cap), mPosePub(pose_pub) {}
 
     bool GrabImage(); // Returns false if frame capture fails or user quits
 
     ORB_SLAM3::System* mpSLAM;
 private:
-    ORB_SLAM3::Tracking* mpTracker;
-    ORB_SLAM3::KeyFrame* pLastKF;
-    ORB_SLAM3::KeyFrame* pKF;
     cv::VideoCapture& mCap; // Reference to the VideoCapture object
     ros::Publisher& mPosePub; // Reference to the pose publisher
-    ros::Publisher& mkeyframePub; // Reference to the keyframe pose publisher
 };
 
 bool ImageGrabber::GrabImage()
@@ -61,7 +50,6 @@ bool ImageGrabber::GrabImage()
 
     // Process frame with ORB-SLAM3 and get pose
     cv::Mat pose = mpSLAM->TrackMonocular(frame, timestamp);
-    // mpTracker = mpSLAM->mpTracker;
 
     // Check if pose is valid (not empty and 4x4)
     if (!pose.empty() && pose.rows == 4 && pose.cols == 4) {
@@ -100,53 +88,14 @@ bool ImageGrabber::GrabImage()
 
         // Publish the pose
         mPosePub.publish(pose_msg);
-        ROS_INFO_STREAM("Published pose: x=" << pose_msg.pose.position.x
-                        << ", y=" << pose_msg.pose.position.y
-                        << ", z=" << pose_msg.pose.position.z);
+        ROS_INFO_STREAM_ONCE("Initial done" );
     } else {
         ROS_WARN("Invalid or empty pose returned by ORB-SLAM3");
     }
-    // pKF = mpTracker->mCurrentFrame.mpReferenceKF;
-    // if (pKF && pKF != pLastKF) {
-    //     cv::Mat Tcw = pKF->mTcw.clone();  // 成功！4x4 cv::Mat
 
-    //     cv::Mat R = Tcw(cv::Rect(0,0,3,3));
-    //     cv::Mat t = Tcw(cv::Rect(3,0,1,3));
-    //     cv::Mat R_corrected = R_camera_to_world * R;
-
-    //     // Apply scale factor to translation
-    //     cv::Mat t_corr = R_camera_to_world * t;
-
-    //     // Convert rotation matrix to quaternion
-    //     cv::Mat Rvec;
-    //     cv::Rodrigues(R_corrected, Rvec); // Convert rotation matrix to rotation vector
-    //     double theta = cv::norm(Rvec);
-    //     cv::Mat axis = Rvec / (theta + 1e-6); // Avoid division by zero
-    //     double angle = theta / 2.0;
-    //     double sinAngle = sin(angle);
-
-    //     geometry_msgs::PoseStamped msg;
-    //     msg.header.stamp = ros::Time(timestamp);
-    //     msg.header.frame_id = "map";
-    //     msg.pose.position.x = t_corr.at<float>(0);
-    //     msg.pose.position.y = t_corr.at<float>(1);
-    //     msg.pose.position.z = t_corr.at<float>(2);
-    //     msg.pose.orientation.x = sinAngle * axis.at<float>(0);
-    //     msg.pose.orientation.y = sinAngle * axis.at<float>(1);
-    //     msg.pose.orientation.z = sinAngle * axis.at<float>(2);
-    //     msg.pose.orientation.w = cos(angle);
-
-    //     mkeyframePub.publish(msg);
-    //     ROS_INFO_STREAM("KEYFRAME #" << pKF->mnId << " @ t=[" 
-    //                     << t_corr.at<float>(0) << ","
-    //                     << t_corr.at<float>(1) << ","
-    //                     << t_corr.at<float>(2) << "]");
-
-    //     pLastKF = pKF;
-    // }
     // Display the frame for visualization
     // cv::imshow("Camera Feed", frame);
-
+    cv::imwrite("/home/jetson/exp_ws/src/vml/assets/drone/frame.jpg", frame); // Save the current frame to a file
     // Return false if 'q' is pressed to exit
     if (cv::waitKey(1) == 'q') {
         return false;
@@ -164,7 +113,6 @@ int main(int argc, char *argv[])
 
     // Create publisher for pose
     ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/orb_slam3/pose", 10);
-    ros::Publisher keyframe_pub = nh.advertise<geometry_msgs::PoseStamped>("/orb_slam3/keyframe/pose", 10);
 
     // Initialize ORB-SLAM3 system (Monocular mode)
     ORB_SLAM3::System SLAM(vocFile, parameterFile, ORB_SLAM3::System::MONOCULAR, false);
@@ -187,7 +135,7 @@ int main(int argc, char *argv[])
               << "x" << cap.get(cv::CAP_PROP_FRAME_HEIGHT) << std::endl;
 
     // Initialize ImageGrabber with SLAM, VideoCapture, and publisher
-    ImageGrabber igb(&SLAM, cap, pose_pub, keyframe_pub);
+    ImageGrabber igb(&SLAM, cap, pose_pub);
 
     // Main loop to capture and process frames
     while (ros::ok() && igb.GrabImage()) {

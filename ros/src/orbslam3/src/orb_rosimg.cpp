@@ -12,8 +12,8 @@
  
 using namespace std;
  
-string paramterfile = "/home/py/orb_slam/ORB_SLAM3_Ubuntu20.04/ros/src/orbslam3/config/myslam_640_480.yaml";
-string vocFile = "/home/py/orb_slam/ORB_SLAM3_Ubuntu20.04/Vocabulary/ORBvoc.txt";
+string paramterfile = "/home/jetson/orb_slam/ORB_SLAM3_Ubuntu20.04/ros/src/orbslam3/config/myslam_640_480.yaml";
+string vocFile = "/home/jetson/orb_slam/ORB_SLAM3_Ubuntu20.04/Vocabulary/ORBvoc.txt";
  
 class ImageGrabber
 {
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     ros::start();
  
 
-    ORB_SLAM3::System SLAM(vocFile, paramterfile, ORB_SLAM3::System::MONOCULAR, true);
+    ORB_SLAM3::System SLAM(vocFile, paramterfile, ORB_SLAM3::System::MONOCULAR, false);
 
     ImageGrabber igb(&SLAM);
  
