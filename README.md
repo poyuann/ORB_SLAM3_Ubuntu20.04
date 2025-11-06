@@ -9,7 +9,7 @@ I got some useful informations from this website before create this project. Tha
 sudo apt update
 
 sudo apt-get install build-essential
-sudo apt-get install python-dev python-numpy git
+sudo apt install libopencv-dev=4.2.0+dfsg-5 python3-opencv=4.2.0+dfsg-5 python-numpy git
 sudo apt install libavdevice-dev libzstd-dev libopenni-dev libopenni2-dev libglew-dev
 ```
 ### ROS noetic
